@@ -31,6 +31,7 @@ export default function PostEditor({ initialPost }: Props) {
   const [status, setStatus] = useState<PostStatus>(initialPost?.status ?? 'draft')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // ── Markdown Import ──────────────────────────────────────────────────────────
@@ -101,6 +102,7 @@ export default function PostEditor({ initialPost }: Props) {
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files?.length) return
     setIsUploading(true)
+    setUploadError(null)
     const file = e.target.files[0]
     const fileExt = file.name.split('.').pop()
     const fileName = `cover-${Date.now()}.${fileExt}`
@@ -110,7 +112,7 @@ export default function PostEditor({ initialPost }: Props) {
       .upload(fileName, file)
       
     if (error) {
-      alert('Error uploading cover image')
+      setUploadError(error.message || 'Error uploading cover image')
       setIsUploading(false)
       return
     }
@@ -238,10 +240,13 @@ export default function PostEditor({ initialPost }: Props) {
               </button>
             </div>
           ) : (
-            <label className={styles.uploadBtn}>
-              {isUploading ? 'Uploading...' : 'Upload Image'}
-              <input type="file" accept="image/*" hidden onChange={handleCoverUpload} disabled={isUploading} />
-            </label>
+            <>
+              <label className={styles.uploadBtn}>
+                {isUploading ? 'Uploading...' : 'Upload Image'}
+                <input type="file" accept="image/*" hidden onChange={handleCoverUpload} disabled={isUploading} />
+              </label>
+              {uploadError && <p className={styles.errorText}>{uploadError}</p>}
+            </>
           )}
         </div>
 

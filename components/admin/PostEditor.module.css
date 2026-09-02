@@ -187,6 +187,14 @@
   color: var(--emerald-deep);
 }
 
+.errorText {
+  color: #D32F2F;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  margin: 12px 0 0;
+  text-align: center;
+}
+
 .coverPreview {
   position: relative;
   width: 100%;
