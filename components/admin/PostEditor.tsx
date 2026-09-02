@@ -68,6 +68,9 @@ export default function PostEditor({ initialPost }: Props) {
       // ── Cleanup Body ──
       let cleanBody = body.trimStart()
       
+      // 0. Remove any leading <div ...> tags
+      cleanBody = cleanBody.replace(/^<div[^>]*>\n*/i, '').trimStart()
+      
       // 1. Extract H1 Title if it's the very first thing
       const h1Match = cleanBody.match(/^#\s+([^\n]+)/)
       if (h1Match) {
