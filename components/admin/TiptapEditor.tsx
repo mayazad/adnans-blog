@@ -6,6 +6,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import CharacterCount from '@tiptap/extension-character-count'
+import TextAlign from '@tiptap/extension-text-align'
 import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table'
 import { Markdown } from '@tiptap/markdown'
 import { useCallback, useImperativeHandle, forwardRef } from 'react'
@@ -43,8 +44,12 @@ const TiptapEditor = forwardRef<TiptapEditorRef, Props>(function TiptapEditor({ 
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
+      TableHeader,
       TableCell,
       CharacterCount,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
       Markdown,
     ],
     content,
@@ -142,6 +147,43 @@ const TiptapEditor = forwardRef<TiptapEditorRef, Props>(function TiptapEditor({ 
             title="Link"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          </button>
+        </div>
+
+        <div className={styles.toolbarDivider} />
+
+        <div className={styles.toolbarGroup}>
+          <button
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            className={`${styles.toolbarBtn} ${editor.isActive({ textAlign: 'left' }) ? styles.active : ''}`}
+            title="Align Left"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            className={`${styles.toolbarBtn} ${editor.isActive({ textAlign: 'center' }) ? styles.active : ''}`}
+            title="Align Center"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            className={`${styles.toolbarBtn} ${editor.isActive({ textAlign: 'right' }) ? styles.active : ''}`}
+            title="Align Right"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+            className={`${styles.toolbarBtn} ${editor.isActive({ textAlign: 'justify' }) ? styles.active : ''}`}
+            title="Justify"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
           </button>
         </div>
 

@@ -11,6 +11,9 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .brand {
@@ -64,7 +67,6 @@
 
 .main {
   flex: 1;
-  overflow-y: auto;
 }
 
 .container {
@@ -85,6 +87,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    height: auto;
+    position: static;
   }
   
   .brand { border-bottom: none; }
