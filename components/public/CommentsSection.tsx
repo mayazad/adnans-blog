@@ -27,6 +27,13 @@ export default function CommentsSection({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
+  
+  // Custom Modal States
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [reportingId, setReportingId] = useState<string | null>(null)
+  const [reportReason, setReportReason] = useState('')
+  const [toastMsg, setToastMsg] = useState<string | null>(null)
+
   const supabase = createClient()
 
   // Group comments into a tree
@@ -99,7 +106,7 @@ export default function CommentsSection({
     if (error || !data) {
       setComments((prev) => prev.filter((c) => c.id !== tempId))
       if (!parentId) setInput(replyContent)
-      alert('Failed to post comment. Please try again.')
+      setToastMsg('Failed to post comment. Please try again.')
     } else {
       setComments((prev) => prev.map((c) => (c.id === tempId ? (data as CommentWithUser) : c)))
     }
@@ -140,20 +147,25 @@ export default function CommentsSection({
     }
   }
 
-  async function handleDelete(commentId: string) {
-    if (!confirm('Are you sure you want to delete this comment?')) return
+  async function confirmDelete() {
+    if (!deletingId) return
+    const commentId = deletingId
+    setDeletingId(null)
     
     setComments(prev => prev.filter(c => c.id !== commentId && c.parent_comment_id !== commentId))
     
     const { error } = await supabase.from('comments').delete().eq('id', commentId)
-    if (error) alert('Failed to delete comment.')
+    if (error) setToastMsg('Failed to delete comment.')
   }
 
-  async function handleReport(commentId: string) {
-    if (!user) return setAuthModalOpen(true)
+  async function confirmReport(e: React.FormEvent) {
+    e.preventDefault()
+    if (!reportingId || !reportReason.trim() || !user) return
     
-    const reason = prompt('Why are you reporting this comment?')
-    if (!reason) return
+    const commentId = reportingId
+    const reason = reportReason
+    setReportingId(null)
+    setReportReason('')
     
     const { error } = await supabase.from('reports').insert({
       comment_id: commentId,
@@ -161,8 +173,8 @@ export default function CommentsSection({
       reason
     })
     
-    if (error) alert('You have already reported this comment or an error occurred.')
-    else alert('Report submitted successfully. Thank you.')
+    if (error) setToastMsg('You have already reported this or an error occurred.')
+    else setToastMsg('Report submitted successfully. Thank you.')
   }
 
   function getInitials(name: string | null, username: string | null) {
@@ -232,9 +244,12 @@ export default function CommentsSection({
                 Reply
               </button>
               {isOwner ? (
-                <button className={styles.actionText} onClick={() => handleDelete(c.id)}>Delete</button>
+                <button className={styles.actionText} onClick={() => setDeletingId(c.id)}>Delete</button>
               ) : (
-                <button className={styles.actionText} onClick={() => handleReport(c.id)}>Report</button>
+                <button className={styles.actionText} onClick={() => {
+                  if (!user) return setAuthModalOpen(true)
+                  setReportingId(c.id)
+                }}>Report</button>
               )}
             </div>
 
@@ -335,6 +350,55 @@ export default function CommentsSection({
           onClose={() => setAuthModalOpen(false)}
           message="Sign in to join the discussion."
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingId && (
+        <div className={styles.overlay}>
+          <div className={styles.modal}>
+            <h3 className={styles.modalTitle}>Delete Comment?</h3>
+            <p className={styles.modalDesc}>This action cannot be undone.</p>
+            <div className={styles.modalActions}>
+              <button className="btn-secondary" onClick={() => setDeletingId(null)}>Cancel</button>
+              <button className="btn-primary" style={{ background: '#e53e3e', borderColor: '#e53e3e' }} onClick={confirmDelete}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {reportingId && (
+        <div className={styles.overlay}>
+          <div className={styles.modal}>
+            <h3 className={styles.modalTitle}>Report Comment</h3>
+            <form onSubmit={confirmReport}>
+              <textarea
+                className={styles.textarea}
+                placeholder="Why are you reporting this comment?"
+                value={reportReason}
+                onChange={(e) => setReportReason(e.target.value)}
+                rows={3}
+                required
+                autoFocus
+              />
+              <div className={styles.modalActions} style={{ marginTop: '16px' }}>
+                <button type="button" className="btn-secondary" onClick={() => {
+                  setReportingId(null)
+                  setReportReason('')
+                }}>Cancel</button>
+                <button type="submit" className="btn-primary" disabled={!reportReason.trim()}>Submit Report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className={styles.toast}>
+          <p>{toastMsg}</p>
+          <button className={styles.toastClose} onClick={() => setToastMsg(null)}>×</button>
+        </div>
       )}
     </section>
   )
