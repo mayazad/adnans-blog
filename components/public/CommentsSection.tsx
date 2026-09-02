@@ -207,21 +207,22 @@ export default function CommentsSection({
             <p className={styles.commentText}>{c.content}</p>
             
             <div className={styles.commentActions}>
-              <div className={styles.voteGroup}>
+              <div className={styles.voteButtons}>
                 <button 
-                  className={`${styles.actionBtn} ${myVote === 1 ? styles.votedUp : ''}`} 
+                  className={`${styles.voteBtn} ${myVote === 1 ? styles.votedUp : ''}`} 
                   onClick={() => handleVote(c.id, 1)}
                   title="Upvote"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 15l-6-6-6 6"/></svg>
+                  <span className={styles.voteCount}>{upvotes > 0 ? upvotes : ''}</span>
                 </button>
-                <span className={styles.score}>{score}</span>
                 <button 
-                  className={`${styles.actionBtn} ${myVote === -1 ? styles.votedDown : ''}`} 
+                  className={`${styles.voteBtn} ${myVote === -1 ? styles.votedDown : ''}`} 
                   onClick={() => handleVote(c.id, -1)}
                   title="Downvote"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <span className={styles.voteCount}>{downvotes > 0 ? downvotes : ''}</span>
                 </button>
               </div>
               <button 
