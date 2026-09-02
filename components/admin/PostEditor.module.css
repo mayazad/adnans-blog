@@ -14,9 +14,60 @@
 
 .header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
+
+.importBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.importBtn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.importStatus {
+  position: relative;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 40px 10px 14px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.importStatus p { margin: 0; }
+
+.dismissStatus {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+.dismissStatus:hover { color: var(--ink); }
 
 .titleInput {
   width: 100%;

@@ -6,22 +6,28 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import CharacterCount from '@tiptap/extension-character-count'
-import { useCallback } from 'react'
+import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table'
+import { Markdown } from '@tiptap/markdown'
+import { useCallback, useImperativeHandle, forwardRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import styles from './TiptapEditor.module.css'
+
+export interface TiptapEditorRef {
+  loadMarkdown: (markdown: string) => void
+}
 
 interface Props {
   content: string
   onChange: (html: string) => void
 }
 
-export default function TiptapEditor({ content, onChange }: Props) {
+const TiptapEditor = forwardRef<TiptapEditorRef, Props>(function TiptapEditor({ content, onChange }, ref) {
   const supabase = createClient()
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: { levels: [2, 3] },
+        heading: { levels: [1, 2, 3] },
       }),
       Placeholder.configure({
         placeholder: 'Start writing...',
@@ -34,7 +40,12 @@ export default function TiptapEditor({ content, onChange }: Props) {
           class: styles.editorImage,
         },
       }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
       CharacterCount,
+      Markdown,
     ],
     content,
     editorProps: {
@@ -46,6 +57,15 @@ export default function TiptapEditor({ content, onChange }: Props) {
       onChange(editor.getHTML())
     },
   })
+
+  useImperativeHandle(ref, () => ({
+    loadMarkdown(markdown: string) {
+      if (!editor) return
+      // The @tiptap/markdown extension adds setMarkdownContent command
+      ;(editor.commands as any).setMarkdownContent(markdown, true)
+      onChange(editor.getHTML())
+    },
+  }))
 
   const setLink = useCallback(() => {
     if (!editor) return
@@ -71,8 +91,7 @@ export default function TiptapEditor({ content, onChange }: Props) {
         const fileName = `${Math.random()}.${fileExt}`
         const filePath = `post-images/${fileName}`
 
-        // Upload to Supabase Storage
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('public-assets')
           .upload(filePath, file)
 
@@ -129,6 +148,14 @@ export default function TiptapEditor({ content, onChange }: Props) {
         <div className={styles.toolbarGroup}>
           <button
             type="button"
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            className={`${styles.toolbarBtn} ${editor.isActive('heading', { level: 1 }) ? styles.active : ''}`}
+            title="Heading 1"
+          >
+            H1
+          </button>
+          <button
+            type="button"
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
             className={`${styles.toolbarBtn} ${editor.isActive('heading', { level: 2 }) ? styles.active : ''}`}
             title="Heading 2"
@@ -166,6 +193,22 @@ export default function TiptapEditor({ content, onChange }: Props) {
         <div className={styles.toolbarGroup}>
           <button
             type="button"
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={`${styles.toolbarBtn} ${editor.isActive('bulletList') ? styles.active : ''}`}
+            title="Bullet List"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`${styles.toolbarBtn} ${editor.isActive('orderedList') ? styles.active : ''}`}
+            title="Ordered List"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+          </button>
+          <button
+            type="button"
             onClick={addImage}
             className={styles.toolbarBtn}
             title="Add Image"
@@ -186,4 +229,6 @@ export default function TiptapEditor({ content, onChange }: Props) {
       </div>
     </div>
   )
-}
+})
+
+export default TiptapEditor
