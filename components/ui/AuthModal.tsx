@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import styles from './AuthModal.module.css'
@@ -15,6 +16,11 @@ export default function AuthModal({ isOpen, onClose, message = 'Sign in to conti
   const modalRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -30,7 +36,7 @@ export default function AuthModal({ isOpen, onClose, message = 'Sign in to conti
     }
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
   function handleGoogle() {
     supabase.auth.signInWithOAuth({
@@ -46,7 +52,7 @@ export default function AuthModal({ isOpen, onClose, message = 'Sign in to conti
     router.push(`/login?redirectTo=${encodeURIComponent(window.location.pathname)}`)
   }
 
-  return (
+  return createPortal(
     <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
       <div 
         className={styles.modal} 
@@ -77,6 +83,7 @@ export default function AuthModal({ isOpen, onClose, message = 'Sign in to conti
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
