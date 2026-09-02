@@ -88,7 +88,8 @@ export default async function PostPage({ params }: Props) {
     userProfile = data
   }
 
-  const headings = extractHeadings(post.content ?? '')
+  const htmlWithIds = addHeadingIds(post.content ?? '')
+  const headings = extractHeadings(htmlWithIds)
   const reactionCount = reactions?.length ?? 0
   const userReaction = user
     ? reactions?.find((r) => r.user_id === user.id)
