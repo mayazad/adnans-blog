@@ -238,15 +238,16 @@ export default function CommentsSection({
                 </button>
               </div>
               <button 
+                type="button"
                 className={styles.actionText} 
                 onClick={() => setReplyingTo(replyingTo === c.id ? null : c.id)}
               >
                 Reply
               </button>
               {isOwner ? (
-                <button className={styles.actionText} onClick={() => setDeletingId(c.id)}>Delete</button>
+                <button type="button" className={styles.actionText} onClick={() => setDeletingId(c.id)}>Delete</button>
               ) : (
-                <button className={styles.actionText} onClick={() => {
+                <button type="button" className={styles.actionText} onClick={() => {
                   if (!user) return setAuthModalOpen(true)
                   setReportingId(c.id)
                 }}>Report</button>
