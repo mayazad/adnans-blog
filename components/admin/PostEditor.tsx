@@ -304,6 +304,7 @@ export default function PostEditor({ initialPost }: Props) {
                   setIsSubmitting(true)
                   try {
                     await deletePost(initialPost!.id)
+                    router.push('/admin/posts')
                   } catch (err) {
                     setIsSubmitting(false)
                     alert('Error deleting post')

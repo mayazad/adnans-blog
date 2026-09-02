@@ -69,5 +69,6 @@ export async function deletePost(id: string) {
 
   revalidatePath('/')
   revalidatePath('/admin/posts')
-  redirect('/admin/posts')
+  
+  return { success: true }
 }
