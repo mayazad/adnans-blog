@@ -1,0 +1,26 @@
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  margin: 32px 0 20px;
+  transition: color 0.15s ease;
+}
+.backLink:hover { color: var(--ink); }
+
+.articleGrid {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 680px) 160px;
+  gap: 48px;
+  justify-content: center;
+  padding-bottom: 72px;
+}
+
+@media (max-width: 900px) {
+  .articleGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

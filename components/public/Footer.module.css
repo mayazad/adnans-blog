@@ -1,0 +1,23 @@
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0 40px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+.wordmark:hover { color: var(--emerald-deep); }
+
+.copy { flex-shrink: 0; }

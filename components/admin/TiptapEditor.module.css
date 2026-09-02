@@ -1,0 +1,155 @@
+.editorWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.toolbarGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  margin: 0 4px;
+}
+
+.toolbarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.toolbarBtn:hover {
+  background: var(--neutral-tint);
+  color: var(--ink);
+}
+
+.toolbarBtn.active {
+  background: var(--emerald-tint);
+  color: var(--emerald-deep);
+}
+
+.editorScrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  cursor: text;
+}
+
+.editorFooter {
+  padding: 8px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--bg-raised);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ProseMirror global styling within the editor */
+.prose {
+  outline: none;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink);
+  min-height: 400px;
+}
+
+/* Tiptap specific styles */
+.prose p.is-editor-empty:first-child::before {
+  color: var(--ink-faint);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.prose h2 {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin: 32px 0 16px;
+}
+
+.prose h3 {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 1.05rem;
+  margin: 24px 0 12px;
+}
+
+.prose p {
+  margin: 0 0 16px;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--emerald);
+  padding-left: 16px;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.prose code {
+  background: var(--neutral-tint);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.prose pre {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  margin: 24px 0;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.editorImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: 24px 0;
+}

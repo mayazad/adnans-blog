@@ -1,0 +1,59 @@
+.rail {
+  position: sticky;
+  top: 90px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reactBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  transition: all 0.15s ease;
+  width: fit-content;
+}
+
+.reactBtn:hover {
+  border-color: var(--ink-faint);
+  color: var(--ink);
+  transform: scale(1.02);
+}
+
+.reactBtn.active {
+  border-color: var(--emerald);
+  color: var(--emerald-deep);
+  background: var(--emerald-tint);
+}
+
+.note {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  max-width: 130px;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .rail {
+    position: static;
+    flex-direction: row;
+    margin-bottom: 30px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+  }
+  
+  .note {
+    margin-top: 0;
+    margin-left: 8px;
+  }
+}
