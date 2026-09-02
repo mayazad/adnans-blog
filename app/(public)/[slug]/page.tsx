@@ -8,7 +8,7 @@ import TOC from '@/components/public/TOC'
 import ReactionRail from '@/components/public/ReactionRail'
 import CommentsSection from '@/components/public/CommentsSection'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'
-import { extractHeadings } from '@/lib/utils'
+import { extractHeadings, addHeadingIds } from '@/lib/utils'
 import styles from './post.module.css'
 
 interface Props {
@@ -59,15 +59,16 @@ export default async function PostPage({ params }: Props) {
 
   const typedPost = post as PostWithAuthor
 
-  // Fetch comments with user profile
+  // Fetch comments with user profile and votes
   const { data: comments } = await supabase
     .from('comments')
     .select(`
       *,
-      profiles:user_id ( id, full_name, username, avatar_url )
+      profiles:user_id ( id, full_name, username, avatar_url ),
+      comment_votes ( vote_value, user_id )
     `)
     .eq('post_id', post.id)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: true })
 
   // Fetch reactions
   const { data: reactions } = await supabase
@@ -116,7 +117,7 @@ export default async function PostPage({ params }: Props) {
 
           {/* Article body */}
           <div className={styles.mainContent}>
-            <ArticleBody content={post.content ?? ''} />
+            <ArticleBody content={htmlWithIds} />
           </div>
 
           {/* Reaction rail — desktop right sidebar */}

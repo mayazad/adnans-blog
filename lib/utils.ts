@@ -83,6 +83,19 @@ export function extractHeadings(
 }
 
 /**
+ * Parses raw HTML and injects `id="..."` into <h2> and <h3> tags based on their text content.
+ */
+export function addHeadingIds(html: string): string {
+  return html.replace(/<h([23])([^>]*)>(.*?)<\/h\1>/gi, (match, level, attrs, content) => {
+    // If it already has an ID, leave it alone
+    if (attrs.includes('id=')) return match;
+    const text = content.replace(/<[^>]*>/g, '').trim();
+    const id = slugify(text);
+    return `<h${level} id="${id}"${attrs}>${content}</h${level}>`;
+  });
+}
+
+/**
  * Generates a safe heading ID from text.
  * e.g. "The Illusion" → "the-illusion"
  */

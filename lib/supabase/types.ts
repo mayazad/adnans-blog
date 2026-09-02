@@ -143,7 +143,48 @@ export interface Database {
           value: Json
         }
         Update: {
+          key?: string
           value?: Json
+        }
+      }
+      comment_votes: {
+        Row: {
+          id: string
+          comment_id: string
+          user_id: string
+          vote_value: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          comment_id: string
+          user_id: string
+          vote_value: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          vote_value?: number
+        }
+      }
+      reports: {
+        Row: {
+          id: string
+          comment_id: string
+          reporter_id: string
+          reason: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          comment_id: string
+          reporter_id: string
+          reason: string
+          created_at?: string
+        }
+        Update: {
+          reason?: string
         }
       }
     }
@@ -164,13 +205,16 @@ export type Post = Database['public']['Tables']['posts']['Row']
 export type Comment = Database['public']['Tables']['comments']['Row']
 export type Reaction = Database['public']['Tables']['reactions']['Row']
 export type Setting = Database['public']['Tables']['settings']['Row']
+export type CommentVote = Database['public']['Tables']['comment_votes']['Row']
+export type Report = Database['public']['Tables']['reports']['Row']
 
 // Post with author profile joined
 export type PostWithAuthor = Post & {
   profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'> | null
 }
 
-// Comment with user profile joined
+// Comment with user profile joined and votes
 export type CommentWithUser = Comment & {
   profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'>
+  comment_votes?: Pick<CommentVote, 'vote_value' | 'user_id'>[]
 }

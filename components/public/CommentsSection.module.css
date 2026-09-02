@@ -117,11 +117,104 @@
 }
 
 .commentText {
+  margin: 0;
   font-family: var(--sans);
   font-size: 0.95rem;
   color: var(--ink);
-  line-height: 1.6;
-  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.voteGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-raised);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.actionBtn:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.votedUp {
+  color: var(--emerald) !important;
+}
+
+.votedDown {
+  color: #e53e3e !important;
+}
+
+.score {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink);
+  min-width: 14px;
+  text-align: center;
+}
+
+.actionText {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.actionText:hover {
+  color: var(--ink);
+}
+
+.replyForm {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentThread {
+  display: flex;
+  flex-direction: column;
+}
+
+.replyDepth {
+  margin-left: 20px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+  margin-top: -10px;
+  padding-top: 10px;
+}
+
+.repliesList {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 560px) {
