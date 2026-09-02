@@ -31,6 +31,7 @@ export default function PostEditor({ initialPost }: Props) {
   const [status, setStatus] = useState<PostStatus>(initialPost?.status ?? 'draft')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // ── Markdown Import ──────────────────────────────────────────────────────────
   const handleMarkdownImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,11 +213,7 @@ export default function PostEditor({ initialPost }: Props) {
               <button
                 className="btn-secondary"
                 style={{ color: '#D32F2F', borderColor: '#FFCDD2', background: '#FFF' }}
-                onClick={async () => {
-                  if (confirm('Are you sure you want to delete this post?')) {
-                    await deletePost(initialPost.id)
-                  }
-                }}
+                onClick={() => setShowDeleteConfirm(true)}
               >
                 Delete Post
               </button>
@@ -282,6 +279,41 @@ export default function PostEditor({ initialPost }: Props) {
           </div>
         </div>
       </aside>
+
+      {/* Custom Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h3>Delete Post</h3>
+            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+            <div className={styles.modalActions}>
+              <button 
+                className="btn-secondary" 
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary" 
+                style={{ background: '#D32F2F', borderColor: '#D32F2F' }}
+                onClick={async () => {
+                  setIsSubmitting(true)
+                  try {
+                    await deletePost(initialPost!.id)
+                  } catch (err) {
+                    setIsSubmitting(false)
+                    alert('Error deleting post')
+                  }
+                }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
