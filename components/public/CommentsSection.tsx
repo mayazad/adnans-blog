@@ -213,7 +213,7 @@ export default function CommentsSection({
                   onClick={() => handleVote(c.id, 1)}
                   title="Upvote"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 15l-6-6-6 6"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill={myVote === 1 ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18v-6H5l7-7 7 7h-4v6H9z"/></svg>
                   <span className={styles.voteCount}>{upvotes > 0 ? upvotes : ''}</span>
                 </button>
                 <button 
@@ -221,7 +221,7 @@ export default function CommentsSection({
                   onClick={() => handleVote(c.id, -1)}
                   title="Downvote"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill={myVote === -1 ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 6v6h4l-7 7-7-7h4V6h6z"/></svg>
                   <span className={styles.voteCount}>{downvotes > 0 ? downvotes : ''}</span>
                 </button>
               </div>
