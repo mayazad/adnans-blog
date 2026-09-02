@@ -64,8 +64,28 @@ export default function PostEditor({ initialPost }: Props) {
         warningMsg += `\n⚠ ${localImages.length} local image(s) detected. Upload them via the image button in the toolbar.`
       }
 
+      // ── Cleanup Body ──
+      let cleanBody = body.trimStart()
+      
+      // 1. Extract H1 Title if it's the very first thing
+      const h1Match = cleanBody.match(/^#\s+([^\n]+)/)
+      if (h1Match) {
+        if (!frontmatter.title) setTitle(h1Match[1].trim())
+        cleanBody = cleanBody.replace(/^#\s+[^\n]+\n*/, '').trimStart()
+      }
+
+      // 2. Extract Author Block (Name + Email) if it's at the top
+      const authorMatch = cleanBody.match(/^([a-zA-Z\s]+)\n+([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\n*/)
+      if (authorMatch) {
+        cleanBody = cleanBody.replace(/^([a-zA-Z\s]+)\n+([a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\n*/, '').trimStart()
+      }
+
+      // 3. Remove rogue HTML tags like </div> or HRs (---) at the top
+      cleanBody = cleanBody.replace(/^(<\/div>|<hr\/?>|---|___|\*\*\*)\n*/i, '').trimStart()
+      cleanBody = cleanBody.replace(/^(<\/div>|<hr\/?>|---|___|\*\*\*)\n*/i, '').trimStart() // Run twice in case of </div>\n---
+
       // Load markdown body into Tiptap
-      editorRef.current?.loadMarkdown(body)
+      editorRef.current?.loadMarkdown(cleanBody)
       setImportStatus(warningMsg)
 
       // Clear the file input so the same file can be re-imported
