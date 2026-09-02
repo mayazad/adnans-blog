@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import type { User } from '@supabase/supabase-js'
 import type { Profile, CommentWithUser } from '@/lib/supabase/types'
@@ -33,6 +34,9 @@ export default function CommentsSection({
   const [reportingId, setReportingId] = useState<string | null>(null)
   const [reportReason, setReportReason] = useState('')
   const [toastMsg, setToastMsg] = useState<string | null>(null)
+  
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const supabase = createClient()
 
@@ -354,7 +358,7 @@ export default function CommentsSection({
       )}
 
       {/* Delete Confirmation Modal */}
-      {deletingId && (
+      {mounted && deletingId && createPortal(
         <div className={styles.overlay}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Delete Comment?</h3>
@@ -364,11 +368,12 @@ export default function CommentsSection({
               <button className="btn-primary" style={{ background: '#e53e3e', borderColor: '#e53e3e' }} onClick={confirmDelete}>Delete</button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Report Modal */}
-      {reportingId && (
+      {mounted && reportingId && createPortal(
         <div className={styles.overlay}>
           <div className={styles.modal}>
             <h3 className={styles.modalTitle}>Report Comment</h3>
@@ -391,15 +396,17 @@ export default function CommentsSection({
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Toast Notification */}
-      {toastMsg && (
+      {mounted && toastMsg && createPortal(
         <div className={styles.toast}>
           <p>{toastMsg}</p>
           <button className={styles.toastClose} onClick={() => setToastMsg(null)}>×</button>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   )
