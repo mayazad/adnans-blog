@@ -63,7 +63,7 @@ const TiptapEditor = forwardRef<TiptapEditorRef, Props>(function TiptapEditor({ 
       if (!editor) return
       import('marked').then(({ marked }) => {
         const html = marked.parse(markdown) as string
-        editor.commands.setContent(html, true)
+        editor.commands.setContent(html)
         onChange(editor.getHTML())
       })
     },
