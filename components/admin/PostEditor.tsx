@@ -6,7 +6,7 @@ import Image from 'next/image'
 import TiptapEditor from './TiptapEditor'
 import { savePost, deletePost } from '@/app/admin/actions'
 import { createClient } from '@/lib/supabase/client'
-import type { Post } from '@/lib/supabase/types'
+import type { Post, PostStatus } from '@/lib/supabase/types'
 import styles from './PostEditor.module.css'
 
 interface Props {
@@ -24,7 +24,7 @@ export default function PostEditor({ initialPost }: Props) {
   const [tags, setTags] = useState(initialPost?.tags?.join(', ') ?? '')
   const [coverImage, setCoverImage] = useState(initialPost?.cover_image ?? '')
   
-  const [status, setStatus] = useState<'draft' | 'published' | 'archived'>(initialPost?.status ?? 'draft')
+  const [status, setStatus] = useState<PostStatus>(initialPost?.status ?? 'draft')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
 

@@ -38,16 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('posts')
-    .select('slug')
-    .eq('status', 'published')
-  return (data ?? []).map((p) => ({ slug: p.slug }))
-}
-
-export const revalidate = 60
+// Removed static generation since we use cookies() for user-specific data
 
 export default async function PostPage({ params }: Props) {
   const { slug } = await params

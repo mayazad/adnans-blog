@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "Adnan's Blog is about AI — how it works, where it fails, and what comes next.",
 }
 
-export const revalidate = 60 // ISR — revalidate every 60 seconds
+
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -29,7 +29,8 @@ export default async function HomePage() {
     .order('published_at', { ascending: false })
     .limit(16)
 
-  const allPosts = (posts ?? []) as PostWithAuthor[]
+  // Cast through any because we omit some fields (like content) in the select
+  const allPosts = (posts ?? []) as any as PostWithAuthor[]
 
   // Reaction counts per post
   const postIds = allPosts.map((p) => p.id)
