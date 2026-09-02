@@ -18,9 +18,31 @@
   padding-bottom: 72px;
 }
 
+.leftSidebar {
+  grid-column: 1;
+}
+.mainContent {
+  grid-column: 2;
+}
+.rightSidebar {
+  grid-column: 3;
+}
+
 @media (max-width: 900px) {
   .articleGrid {
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: 32px;
+  }
+  .leftSidebar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .mainContent {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .rightSidebar {
+    grid-column: 1;
+    grid-row: 3;
   }
 }

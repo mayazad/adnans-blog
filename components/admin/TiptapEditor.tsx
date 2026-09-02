@@ -61,9 +61,11 @@ const TiptapEditor = forwardRef<TiptapEditorRef, Props>(function TiptapEditor({ 
   useImperativeHandle(ref, () => ({
     loadMarkdown(markdown: string) {
       if (!editor) return
-      // The @tiptap/markdown extension adds setMarkdownContent command
-      ;(editor.commands as any).setMarkdownContent(markdown, true)
-      onChange(editor.getHTML())
+      import('marked').then(({ marked }) => {
+        const html = marked.parse(markdown) as string
+        editor.commands.setContent(html, true)
+        onChange(editor.getHTML())
+      })
     },
   }))
 

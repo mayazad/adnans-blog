@@ -110,22 +110,26 @@ export default async function PostPage({ params }: Props) {
 
         <div className={styles.articleGrid}>
           {/* Table of contents — desktop left sidebar */}
-          {headings.length > 0 && (
-            <TOC headings={headings} />
-          )}
+          <div className={styles.leftSidebar}>
+            {headings.length > 0 && <TOC headings={headings} />}
+          </div>
 
           {/* Article body */}
-          <ArticleBody content={post.content ?? ''} />
+          <div className={styles.mainContent}>
+            <ArticleBody content={post.content ?? ''} />
+          </div>
 
           {/* Reaction rail — desktop right sidebar */}
-          <ReactionRail
-            postId={post.id}
-            initialCount={reactionCount}
-            initialUserReacted={!!userReaction}
-            commentCount={comments?.length ?? 0}
-            user={user}
-            userProfile={userProfile}
-          />
+          <div className={styles.rightSidebar}>
+            <ReactionRail
+              postId={post.id}
+              initialCount={reactionCount}
+              initialUserReacted={!!userReaction}
+              commentCount={comments?.length ?? 0}
+              user={user}
+              userProfile={userProfile}
+            />
+          </div>
         </div>
 
         {/* Comments */}
