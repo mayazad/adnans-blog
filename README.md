@@ -1,60 +1,124 @@
+<div align="center">
+
 # Adnan's Blog
 
-A modern, high-performance blog platform built with Next.js 15 and Supabase, featuring a custom rich-text editor, server-side authentication, and a complete admin panel.
+**A minimal, fast, and elegant personal blog platform.**  
+Built for writers who care about the reading experience.
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Postgres-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel&logoColor=white)](https://vercel.com)
 
-- **Responsive Design**: Fluid typography, flex/grid layouts, and a clean reading experience.
-- **Admin Dashboard**: Full CRUD interface for managing posts, users, and site settings.
-- **Rich Text Editor**: Integrated Tiptap editor with inline image uploads and formatting.
-- **Authentication**: Secure email/password and username login powered by Supabase Auth.
-- **Comments & Reactions**: Built-in engagement tools for readers.
-- **Role-Based Access**: Middleware-enforced route protection for readers vs admins.
+</div>
 
-## Tech Stack
+---
 
-- **Framework:** [Next.js 15](https://nextjs.org/) (App Router, Server Actions)
-- **Database & Auth:** [Supabase](https://supabase.com/) (Postgres)
-- **Editor:** [Tiptap](https://tiptap.dev/)
-- **Styling:** Vanilla CSS Modules with a custom Design System
+## ✨ Features
 
-## Local Setup
+| Feature | Description |
+|---|---|
+| 🖊️ **Rich Editor** | Tiptap-powered WYSIWYG with inline image uploads |
+| 🔐 **Auth** | Email & username login via Supabase Auth |
+| 💬 **Comments** | Threaded reader comments on each post |
+| ❤️ **Reactions** | Like, Insightful, and Love reactions per post |
+| 🛡️ **Admin Panel** | Full post management, comment moderation, site settings |
+| 📖 **Reading Progress** | Live reading progress bar on articles |
+| 📑 **Table of Contents** | Auto-generated TOC from article headings |
+| 🎨 **Design System** | Custom CSS design system with dark-mode-ready tokens |
+| ⚡ **SSR** | Server-side rendered pages via Next.js App Router |
 
-### 1. Clone the repository
+---
+
+## 🛠 Tech Stack
+
+- **Framework** — [Next.js 16](https://nextjs.org/) (App Router, Server Actions)
+- **Database & Auth** — [Supabase](https://supabase.com/) (PostgreSQL + Row Level Security)
+- **Editor** — [Tiptap](https://tiptap.dev/)
+- **Styling** — Vanilla CSS Modules with a custom design token system
+- **Deployment** — [Vercel](https://vercel.com/)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- A [Supabase](https://supabase.com) project
+
+### 1. Clone & Install
+
 ```bash
 git clone https://github.com/mayazad/adnans-blog.git
 cd adnans-blog
-```
-
-### 2. Install dependencies
-```bash
 npm install
 ```
 
-### 3. Set up environment variables
-Copy the example environment file:
-```bash
-cp .env.local.example .env.local
+### 2. Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
-Fill in your Supabase project URL and Anon Key in `.env.local`.
 
-### 4. Database Setup (Supabase)
-Run the SQL migrations located in `supabase/migrations/` sequentially in your Supabase SQL Editor:
-1. `001_initial_schema.sql` (Click "Run without RLS")
-2. `002_rls_policies.sql`
-3. `003_triggers.sql`
-4. `004_username_login.sql`
+### 3. Database Setup
 
-Also, ensure you create a **public** storage bucket named `public-assets` in Supabase for image uploads.
+Run the SQL migrations in your **Supabase SQL Editor** in order:
 
-### 5. Run the Development Server
+```
+supabase/migrations/001_initial_schema.sql
+supabase/migrations/002_rls_policies.sql
+supabase/migrations/003_triggers.sql
+supabase/migrations/004_username_login.sql
+```
+
+Also create a **public** Storage bucket named `public-assets` for image uploads.
+
+### 4. Run Locally
+
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Creating an Admin User
-1. Sign up on the local site via `/signup`.
-2. Go to your Supabase Dashboard -> Table Editor -> `profiles`.
-3. Change your user's `role` from `reader` to `admin`.
-4. You can now access the `/admin` dashboard.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🔑 Creating an Admin Account
+
+1. Sign up at `/signup`
+2. In your **Supabase Dashboard** → **Table Editor** → `profiles`
+3. Change your user's `role` from `reader` → `admin`
+4. Access the admin panel at `/admin`
+
+---
+
+## 📁 Project Structure
+
+```
+adnans-blog/
+├── app/
+│   ├── (public)/          # Public-facing pages (home, post, about)
+│   ├── (auth)/            # Login & signup pages
+│   └── admin/             # Admin dashboard (protected)
+├── components/
+│   ├── public/            # Public UI components
+│   ├── admin/             # Admin UI components (PostEditor, TiptapEditor)
+│   └── ui/                # Shared UI (AuthModal)
+├── lib/
+│   ├── supabase/          # Supabase client, server, and types
+│   └── utils.ts           # Shared utilities
+└── supabase/
+    └── migrations/        # SQL migration files
+```
+
+---
+
+<div align="center">
+
+Made by [Adnan](https://github.com/mayazad)
+
+</div>
