@@ -20,9 +20,10 @@ export default async function HomePage() {
     .from('posts')
     .select(
       `
-      id, slug, title, excerpt, cover_image, tags, reading_time_minutes,
+      id, slug, title, excerpt, cover_image, reading_time_minutes,
       published_at, category, source, status,
-      profiles:author_id ( id, full_name, username, avatar_url )
+      profiles:author_id ( id, full_name, username, avatar_url ),
+      post_tags ( tags ( id, name, slug ) )
     `
     )
     .eq('status', 'published')

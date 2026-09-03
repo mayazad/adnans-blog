@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function FeaturedSpread({ post, reactionCount }: Props) {
-  const tag = post.category ?? post.tags?.[0] ?? 'Essay'
+  const tag = post.category ?? ((post as any).post_tags?.[0]?.tags?.name ?? 'Essay')
 
   return (
     <section className={styles.spread} aria-label="Featured post">

@@ -54,9 +54,11 @@ export default async function AdminPostsPage() {
                   <Link href={`/admin/posts/${post.id}`} className={styles.actionBtn}>
                     Edit
                   </Link>
-                  <Link href={`/${post.slug}`} className={styles.actionBtn} target="_blank">
-                    View
-                  </Link>
+                  {post.status === 'published' && (
+                    <Link href={`/${post.slug}`} className={styles.actionBtn} target="_blank">
+                      View
+                    </Link>
+                  )}
                 </td>
               </tr>
             ))}

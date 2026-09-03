@@ -14,7 +14,7 @@ export default function RecentList({ posts, reactionMap }: Props) {
       <h2 className={styles.heading}>Recent</h2>
       <div className={styles.list}>
         {posts.map((post) => {
-          const tag = post.category ?? post.tags?.[0]
+          const tag = post.category ?? ((post as any).post_tags?.[0]?.tags?.name ?? null)
           return (
             <Link
               key={post.id}

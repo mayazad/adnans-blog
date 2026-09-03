@@ -22,6 +22,7 @@ export default function ReactionRail({
   initialUserReacted,
   commentCount,
   user,
+  userProfile,
 }: Props) {
   const [count, setCount] = useState(initialCount)
   const [reacted, setReacted] = useState(initialUserReacted)
@@ -45,17 +46,28 @@ export default function ReactionRail({
     setReacted(newReacted)
     setCount(newCount)
 
+    let error = null
     if (newReacted) {
-      await supabase.from('reactions').insert({
+      const res = await supabase.from('reactions').insert({
         post_id: postId,
         user_id: user.id,
         type: 'like',
       })
+      error = res.error
     } else {
-      await supabase
+      const res = await supabase
         .from('reactions')
         .delete()
         .match({ post_id: postId, user_id: user.id, type: 'like' })
+      error = res.error
+    }
+
+    if (error) {
+      // Rollback optimistic update
+      console.error('Error updating reaction:', error)
+      setReacted(!newReacted)
+      setCount(!newReacted ? newCount + 1 : Math.max(0, newCount - 1))
+      alert('Failed to save reaction. Please try again.')
     }
 
     setIsPending(false)

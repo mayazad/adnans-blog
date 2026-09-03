@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/utils'
 import styles from './ArticleHeader.module.css'
 
 export default function ArticleHeader({ post }: { post: PostWithAuthor }) {
-  const tag = post.category ?? post.tags?.[0]
+  const tag = post.category ?? ((post as any).post_tags?.[0]?.tags?.name ?? null)
   const author = post.profiles
 
   return (

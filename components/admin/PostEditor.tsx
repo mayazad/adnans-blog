@@ -15,6 +15,11 @@ interface Props {
   initialPost?: Post
 }
 
+const CATEGORIES = [
+  'Machine Learning', 'Web Development', 'AI Ethics',
+  'Tools & Infrastructure', 'Generative AI', 'Data Science', 'Opinion', 'Other',
+]
+
 export default function PostEditor({ initialPost }: Props) {
   const router = useRouter()
   const supabase = createClient()
@@ -43,11 +48,6 @@ export default function PostEditor({ initialPost }: Props) {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-
-  const CATEGORIES = [
-    'Machine Learning', 'Web Development', 'AI Ethics',
-    'Tools & Infrastructure', 'Generative AI', 'Data Science', 'Opinion', 'Other',
-  ]
 
   // Load tags + series + existing post associations on mount
   useEffect(() => {

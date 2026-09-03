@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { slugify } from '@/lib/utils'
+import { slugify, estimateReadingTime } from '@/lib/utils'
 
 export async function savePost(formData: FormData) {
   const supabase = await createClient()
@@ -24,10 +24,8 @@ export async function savePost(formData: FormData) {
   const slug = slugify(title)
   const tagIds: string[] = tagIdsStr ? JSON.parse(tagIdsStr) : []
   
-  // Calculate reading time (rough estimate: ~200 words per minute)
-  const textContent = content.replace(/<[^>]*>?/gm, '')
-  const wordCount = textContent.split(/\s+/).filter(Boolean).length
-  const reading_time_minutes = Math.max(1, Math.ceil(wordCount / 200))
+  // Calculate reading time
+  const reading_time_minutes = estimateReadingTime(content)
 
   const postData = {
     title,
