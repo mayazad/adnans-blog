@@ -15,12 +15,14 @@ export async function savePost(formData: FormData) {
   const excerpt = formData.get('excerpt') as string
   const content = formData.get('content') as string
   const category = formData.get('category') as string
-  const tagsStr = formData.get('tags') as string
+  const tagIdsStr = formData.get('tagIds') as string
+  const seriesId = formData.get('seriesId') as string
+  const seriesPosition = parseInt(formData.get('seriesPosition') as string) || 1
   const coverImage = formData.get('cover_image') as string
   const status = formData.get('status') as 'draft' | 'published' | 'archived'
 
   const slug = slugify(title)
-  const tags = tagsStr ? tagsStr.split(',').map((t) => t.trim()).filter(Boolean) : []
+  const tagIds: string[] = tagIdsStr ? JSON.parse(tagIdsStr) : []
   
   // Calculate reading time (rough estimate: ~200 words per minute)
   const textContent = content.replace(/<[^>]*>?/gm, '')
@@ -33,7 +35,6 @@ export async function savePost(formData: FormData) {
     excerpt: excerpt || null,
     content,
     category: category || null,
-    tags,
     cover_image: coverImage || null,
     status,
     reading_time_minutes,
@@ -52,12 +53,32 @@ export async function savePost(formData: FormData) {
     resultId = data.id
   }
 
+  // Sync post_tags — delete existing, re-insert selected
+  await supabase.from('post_tags').delete().eq('post_id', resultId!)
+  if (tagIds.length > 0) {
+    const tagRows = tagIds.map(tag_id => ({ post_id: resultId!, tag_id }))
+    const { error: tagErr } = await supabase.from('post_tags').insert(tagRows)
+    if (tagErr) throw new Error(tagErr.message)
+  }
+
+  // Sync series_posts — delete existing, re-insert if selected
+  await supabase.from('series_posts').delete().eq('post_id', resultId!)
+  if (seriesId) {
+    const { error: sErr } = await supabase
+      .from('series_posts')
+      .insert({ series_id: seriesId, post_id: resultId!, position: seriesPosition })
+    if (sErr) throw new Error(sErr.message)
+  }
+
   revalidatePath('/')
   revalidatePath(`/${slug}`)
   revalidatePath('/admin/posts')
+  revalidatePath('/topics')
+  revalidatePath(`/tags`)
   
   return { id: resultId, slug }
 }
+
 
 export async function deletePost(id: string) {
   const supabase = await createClient()

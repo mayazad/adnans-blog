@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import matter from 'gray-matter'
@@ -8,7 +8,7 @@ import TiptapEditor from './TiptapEditor'
 import type { TiptapEditorRef } from './TiptapEditor'
 import { savePost, deletePost } from '@/app/admin/actions'
 import { createClient } from '@/lib/supabase/client'
-import type { Post, PostStatus } from '@/lib/supabase/types'
+import type { Post, PostStatus, Tag, Series } from '@/lib/supabase/types'
 import styles from './PostEditor.module.css'
 
 interface Props {
@@ -24,15 +24,56 @@ export default function PostEditor({ initialPost }: Props) {
   const [excerpt, setExcerpt] = useState(initialPost?.excerpt ?? '')
   const [content, setContent] = useState(initialPost?.content ?? '')
   const [category, setCategory] = useState(initialPost?.category ?? '')
-  const [tags, setTags] = useState(initialPost?.tags?.join(', ') ?? '')
   const [coverImage, setCoverImage] = useState(initialPost?.cover_image ?? '')
   const [importStatus, setImportStatus] = useState<string | null>(null)
+
+  // Relational tag state
+  const [allTags, setAllTags] = useState<Tag[]>([])
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [tagSearch, setTagSearch] = useState('')
+  const [tagDropOpen, setTagDropOpen] = useState(false)
+
+  // Series state
+  const [allSeries, setAllSeries] = useState<Series[]>([])
+  const [selectedSeriesId, setSelectedSeriesId] = useState<string>('')
+  const [seriesPosition, setSeriesPosition] = useState<number>(1)
   
   const [status, setStatus] = useState<PostStatus>(initialPost?.status ?? 'draft')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  const CATEGORIES = [
+    'Machine Learning', 'Web Development', 'AI Ethics',
+    'Tools & Infrastructure', 'Generative AI', 'Data Science', 'Opinion', 'Other',
+  ]
+
+  // Load tags + series + existing post associations on mount
+  useEffect(() => {
+    async function loadRelational() {
+      const supabase = createClient()
+      const [{ data: tags }, { data: series }] = await Promise.all([
+        supabase.from('tags').select('*').order('name'),
+        supabase.from('series').select('*').order('name'),
+      ])
+      setAllTags((tags ?? []) as Tag[])
+      setAllSeries((series ?? []) as Series[])
+
+      if (initialPost?.id) {
+        const [{ data: postTags }, { data: postSeries }] = await Promise.all([
+          supabase.from('post_tags').select('tag_id').eq('post_id', initialPost.id),
+          supabase.from('series_posts').select('series_id, position').eq('post_id', initialPost.id).maybeSingle(),
+        ])
+        if (postTags) setSelectedTagIds(postTags.map((pt: any) => pt.tag_id))
+        if (postSeries) {
+          setSelectedSeriesId((postSeries as any).series_id ?? '')
+          setSeriesPosition((postSeries as any).position ?? 1)
+        }
+      }
+    }
+    loadRelational()
+  }, [initialPost?.id])
 
   // ── Markdown Import ──────────────────────────────────────────────────────────
   const handleMarkdownImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +93,9 @@ export default function PostEditor({ initialPost }: Props) {
       if (frontmatter.excerpt || frontmatter.description) setExcerpt(frontmatter.excerpt ?? frontmatter.description)
       if (frontmatter.category) setCategory(frontmatter.category)
       if (frontmatter.tags) {
-        setTags(Array.isArray(frontmatter.tags) ? frontmatter.tags.join(', ') : frontmatter.tags)
+        // Tags are now managed relationally via the TagPicker.
+        // Markdown import cannot auto-assign relational tag IDs.
+        // Assign tags manually after importing via the Tags panel.
       }
       if (frontmatter.cover_image || frontmatter.image) {
         setCoverImage(frontmatter.cover_image ?? frontmatter.image)
@@ -139,7 +182,9 @@ export default function PostEditor({ initialPost }: Props) {
     formData.append('excerpt', excerpt)
     formData.append('content', content)
     formData.append('category', category)
-    formData.append('tags', tags)
+    formData.append('tagIds', JSON.stringify(selectedTagIds))
+    formData.append('seriesId', selectedSeriesId)
+    formData.append('seriesPosition', String(seriesPosition))
     formData.append('cover_image', coverImage)
     formData.append('status', actionStatus)
     
@@ -250,7 +295,7 @@ export default function PostEditor({ initialPost }: Props) {
           )}
         </div>
 
-        <div className={styles.panel}>
+          <div className={styles.panel}>
           <h3 className={styles.panelTitle}>Metadata</h3>
           
           <div className={styles.field}>
@@ -266,25 +311,84 @@ export default function PostEditor({ initialPost }: Props) {
 
           <div className={styles.field}>
             <label>Category</label>
-            <input
-              type="text"
+            <select
               className={styles.input}
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. Essay"
-            />
+            >
+              <option value="">— None —</option>
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
           </div>
 
           <div className={styles.field}>
             <label>Tags</label>
-            <input
-              type="text"
-              className={styles.input}
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              placeholder="Comma separated"
-            />
+            {/* Selected chips */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+              {selectedTagIds.map(id => {
+                const tag = allTags.find(t => t.id === id)
+                if (!tag) return null
+                return (
+                  <span key={id} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'var(--emerald-tint)', color: 'var(--emerald-deep)', padding: '3px 10px', borderRadius: 'var(--radius-pill)', fontSize: '0.82rem' }}>
+                    {tag.name}
+                    <button type="button" onClick={() => setSelectedTagIds(prev => prev.filter(t => t !== id))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--emerald)', padding: '0', lineHeight: 1, fontSize: '1rem' }}>×</button>
+                  </span>
+                )
+              })}
+            </div>
+            {/* Tag search/dropdown */}
+            <div style={{ position: 'relative' }}>
+              <input
+                type="text"
+                className={styles.input}
+                placeholder="Search and add tags…"
+                value={tagSearch}
+                onChange={e => { setTagSearch(e.target.value); setTagDropOpen(true) }}
+                onFocus={() => setTagDropOpen(true)}
+                onBlur={() => setTimeout(() => setTagDropOpen(false), 150)}
+              />
+              {tagDropOpen && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'var(--bg-raised)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', zIndex: 10, maxHeight: '180px', overflowY: 'auto' }}>
+                  {allTags
+                    .filter(t => !selectedTagIds.includes(t.id) && t.name.toLowerCase().includes(tagSearch.toLowerCase()))
+                    .map(tag => (
+                      <button
+                        key={tag.id}
+                        type="button"
+                        onMouseDown={() => {
+                          setSelectedTagIds(prev => [...prev, tag.id])
+                          setTagSearch('')
+                        }}
+                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem' }}
+                      >
+                        {tag.name}
+                        {tag.category && <span style={{ color: 'var(--ink-faint)', fontSize: '0.8rem', marginLeft: '8px' }}>{tag.category}</span>}
+                      </button>
+                    ))}
+                  {allTags.filter(t => !selectedTagIds.includes(t.id) && t.name.toLowerCase().includes(tagSearch.toLowerCase())).length === 0 && (
+                    <p style={{ padding: '8px 12px', color: 'var(--ink-faint)', fontSize: '0.85rem', margin: 0 }}>No matching tags. Create one in Admin → Tags.</p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
+        </div>
+
+        <div className={styles.panel}>
+          <h3 className={styles.panelTitle}>Series</h3>
+          <div className={styles.field}>
+            <label>Add to series</label>
+            <select className={styles.input} value={selectedSeriesId} onChange={e => setSelectedSeriesId(e.target.value)}>
+              <option value="">— None —</option>
+              {allSeries.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+          </div>
+          {selectedSeriesId && (
+            <div className={styles.field}>
+              <label>Position in series</label>
+              <input type="number" min={1} className={styles.input} value={seriesPosition} onChange={e => setSeriesPosition(Number(e.target.value))} />
+            </div>
+          )}
         </div>
       </aside>
 

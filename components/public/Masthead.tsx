@@ -56,7 +56,7 @@ export default function Masthead({ user, profile }: MastheadProps) {
         {/* Desktop nav */}
         <nav className={styles.nav} aria-label="Main navigation">
           <Link href="/" className={styles.navLink}>Essays</Link>
-          <Link href="/#topics" className={styles.navLink}>Topics</Link>
+          <Link href="/topics" className={styles.navLink}>Topics</Link>
           <Link href="/about" className={styles.navLink}>About</Link>
           {profile?.role === 'admin' || profile?.role === 'editor' ? (
             <Link href="/admin" className={styles.navLink} style={{ color: 'var(--emerald-deep)' }}>
@@ -150,7 +150,7 @@ export default function Masthead({ user, profile }: MastheadProps) {
       {menuOpen && (
         <nav className={styles.mobileNav} aria-label="Mobile navigation">
           <Link href="/" className={styles.mobileNavLink} onClick={() => setMenuOpen(false)}>Essays</Link>
-          <Link href="/#topics" className={styles.mobileNavLink} onClick={() => setMenuOpen(false)}>Topics</Link>
+          <Link href="/topics" className={styles.mobileNavLink} onClick={() => setMenuOpen(false)}>Topics</Link>
           <Link href="/about" className={styles.mobileNavLink} onClick={() => setMenuOpen(false)}>About</Link>
           {(profile?.role === 'admin' || profile?.role === 'editor') && (
             <Link href="/admin" className={styles.mobileNavLink} onClick={() => setMenuOpen(false)}>Admin</Link>

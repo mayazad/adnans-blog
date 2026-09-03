@@ -187,6 +187,77 @@ export interface Database {
           reason?: string
         }
       }
+      tags: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          category: string | null
+          aliases: string[]
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          category?: string | null
+          aliases?: string[]
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          slug?: string
+          category?: string | null
+          aliases?: string[]
+        }
+      }
+      post_tags: {
+        Row: {
+          post_id: string
+          tag_id: string
+        }
+        Insert: {
+          post_id: string
+          tag_id: string
+        }
+        Update: never
+      }
+      series: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          slug?: string
+          description?: string | null
+        }
+      }
+      series_posts: {
+        Row: {
+          series_id: string
+          post_id: string
+          position: number
+        }
+        Insert: {
+          series_id: string
+          post_id: string
+          position?: number
+        }
+        Update: {
+          position?: number
+        }
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
@@ -217,4 +288,24 @@ export type PostWithAuthor = Post & {
 export type CommentWithUser = Comment & {
   profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'>
   comment_votes?: Pick<CommentVote, 'vote_value' | 'user_id'>[]
+}
+
+export type Tag = Database['public']['Tables']['tags']['Row']
+export type PostTag = Database['public']['Tables']['post_tags']['Row']
+export type Series = Database['public']['Tables']['series']['Row']
+export type SeriesPost = Database['public']['Tables']['series_posts']['Row']
+
+// Post with relational tags joined
+export type PostWithTags = Post & {
+  post_tags: { tags: Tag }[]
+}
+
+// Full post shape used on article page (author + tags + series)
+export type PostWithSeries = Post & {
+  profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'> | null
+  post_tags: { tags: Tag }[]
+  series_posts: {
+    position: number
+    series: Series
+  }[]
 }
