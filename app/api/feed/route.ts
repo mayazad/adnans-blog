@@ -23,7 +23,8 @@ export async function GET() {
 
   if (posts) {
     posts.forEach((post) => {
-      const author = post.profiles ? (post.profiles.full_name || post.profiles.username) : 'Adnan'
+      const profile: any = Array.isArray(post.profiles) ? post.profiles[0] : post.profiles
+      const author = profile ? (profile.full_name || profile.username) : 'Adnan'
       rss += `
   <item>
     <title><![CDATA[${post.title}]]></title>
