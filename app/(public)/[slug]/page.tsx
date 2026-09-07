@@ -64,7 +64,9 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound()
 
   // Increment view count asynchronously
-  supabase.rpc('increment_view_count', { post_id: post.id }).catch(console.error)
+  supabase.rpc('increment_view_count', { post_id: post.id }).then(({ error }) => {
+    if (error) console.error('Error incrementing view count:', error)
+  })
 
   const typedPost = post as PostWithAuthor
   const postTags: Tag[] = ((post as any).post_tags ?? []).map((pt: any) => pt.tags).filter(Boolean)
