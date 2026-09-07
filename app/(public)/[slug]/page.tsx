@@ -12,6 +12,7 @@ import ArticleFooter from '@/components/public/ArticleFooter'
 import RelatedPosts from '@/components/public/RelatedPosts'
 import BackToTop from '@/components/public/BackToTop'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'
+import MobileTOC from '@/components/public/MobileTOC'
 import { extractHeadings, addHeadingIds } from '@/lib/utils'
 import styles from './post.module.css'
 
@@ -242,6 +243,7 @@ export default async function PostPage({ params }: Props) {
         />
       </div>
       <BackToTop />
+      <MobileTOC headings={headings} />
     </>
   )
 }

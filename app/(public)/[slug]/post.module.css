@@ -20,12 +20,15 @@
 
 .leftSidebar {
   grid-column: 1;
+  min-width: 0;
 }
 .mainContent {
   grid-column: 2;
+  min-width: 0;
 }
 .rightSidebar {
   grid-column: 3;
+  min-width: 0;
 }
 
 @media (max-width: 1180px) {
@@ -42,8 +45,7 @@
     padding-bottom: 40px;
   }
   .leftSidebar {
-    grid-column: 1;
-    grid-row: 1;
+    display: none;
   }
   .mainContent {
     grid-column: 1;
