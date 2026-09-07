@@ -1,11 +1,12 @@
 import MermaidBlock from './MermaidBlock'
+import CodeBlock from './CodeBlock'
 import styles from './ArticleBody.module.css'
 
-// Parse HTML content and extract mermaid code blocks to render separately
-function parseContent(html: string): Array<{ type: 'html' | 'mermaid'; content: string }> {
+// Parse HTML content and extract mermaid and regular code blocks to render separately
+function parseContent(html: string): Array<{ type: 'html' | 'mermaid' | 'code'; content: string; raw?: string }> {
   // Match any <pre><code> block
   const codeBlockRegex = /<pre[^>]*>\s*<code([^>]*)>([\s\S]*?)<\/code>\s*<\/pre>/gi
-  const parts: Array<{ type: 'html' | 'mermaid'; content: string }> = []
+  const parts: Array<{ type: 'html' | 'mermaid' | 'code'; content: string; raw?: string }> = []
   let lastIndex = 0
   let match: RegExpExecArray | null
 
@@ -32,7 +33,7 @@ function parseContent(html: string): Array<{ type: 'html' | 'mermaid'; content: 
     if (isMermaidClass || isMermaidSyntax) {
       parts.push({ type: 'mermaid', content: decoded })
     } else {
-      parts.push({ type: 'html', content: match[0] }) // Push the original matched block as HTML
+      parts.push({ type: 'code', content: match[0], raw: decoded }) 
     }
     
     lastIndex = match.index + match[0].length
@@ -51,16 +52,20 @@ export default function ArticleBody({ content }: { content: string }) {
 
   return (
     <article className={styles.articleBody}>
-      {parts.map((part, i) =>
-        part.type === 'mermaid' ? (
-          <MermaidBlock key={i} chart={part.content} />
-        ) : (
+      {parts.map((part, i) => {
+        if (part.type === 'mermaid') {
+          return <MermaidBlock key={i} chart={part.content} />
+        }
+        if (part.type === 'code') {
+          return <CodeBlock key={i} html={part.content} rawCode={part.raw || ''} />
+        }
+        return (
           <div
             key={i}
             dangerouslySetInnerHTML={{ __html: part.content }}
           />
         )
-      )}
+      })}
     </article>
   )
 }

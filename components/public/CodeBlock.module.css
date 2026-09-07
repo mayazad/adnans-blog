@@ -1,0 +1,32 @@
+.wrapper {
+  position: relative;
+}
+
+.copyBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.wrapper:hover .copyBtn,
+.copyBtn:focus {
+  opacity: 1;
+}
+
+.copyBtn:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}

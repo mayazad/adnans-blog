@@ -6,6 +6,7 @@ import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/lib/supabase/types'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import ThemeToggle from './ThemeToggle'
 import styles from './Masthead.module.css'
 
 interface MastheadProps {
@@ -67,6 +68,7 @@ export default function Masthead({ user, profile }: MastheadProps) {
 
         {/* Right controls */}
         <div className={styles.controls}>
+          <ThemeToggle />
           {/* Search */}
           <div className={`${styles.searchBox} ${searchOpen ? styles.searchOpen : ''}`}>
             <button

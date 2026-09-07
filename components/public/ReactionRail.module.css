@@ -29,9 +29,41 @@
 }
 
 .reactBtn.active {
-  border-color: var(--emerald);
-  color: var(--emerald-deep);
+  color: var(--emerald-bright);
   background: var(--emerald-tint);
+  border-color: var(--emerald-bright);
+}
+
+.active svg {
+  fill: var(--emerald-bright);
+}
+
+.activeInsightful {
+  color: #8b5cf6;
+  background: #ede9fe;
+  border-color: #8b5cf6;
+}
+
+.activeInsightful svg {
+  fill: #8b5cf6;
+}
+
+.activeLove {
+  color: #ec4899;
+  background: #fce7f3;
+  border-color: #ec4899;
+}
+
+.activeLove svg {
+  fill: #ec4899;
+}
+
+/* For dark mode overrides if any */
+[data-theme="dark"] .activeInsightful {
+  background: rgba(139, 92, 246, 0.2);
+}
+[data-theme="dark"] .activeLove {
+  background: rgba(236, 72, 153, 0.2);
 }
 
 .note {

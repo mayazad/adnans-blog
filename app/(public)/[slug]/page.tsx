@@ -8,6 +8,9 @@ import ArticleBody from '@/components/public/ArticleBody'
 import TOC from '@/components/public/TOC'
 import ReactionRail from '@/components/public/ReactionRail'
 import CommentsSection from '@/components/public/CommentsSection'
+import ArticleFooter from '@/components/public/ArticleFooter'
+import RelatedPosts from '@/components/public/RelatedPosts'
+import BackToTop from '@/components/public/BackToTop'
 import ReadingProgressBar from '@/components/public/ReadingProgressBar'
 import { extractHeadings, addHeadingIds } from '@/lib/utils'
 import styles from './post.module.css'
@@ -50,7 +53,7 @@ export default async function PostPage({ params }: Props) {
     .from('posts')
     .select(`
       *,
-      profiles:author_id ( id, full_name, username, avatar_url ),
+      profiles:author_id ( id, full_name, username, avatar_url, bio ),
       post_tags ( tags ( id, name, slug ) ),
       series_posts ( position, series ( id, name, slug, description ) )
     `)
@@ -59,6 +62,9 @@ export default async function PostPage({ params }: Props) {
     .single()
 
   if (!post) notFound()
+
+  // Increment view count asynchronously
+  supabase.rpc('increment_view_count', { post_id: post.id }).then()
 
   const typedPost = post as PostWithAuthor
   const postTags: Tag[] = ((post as any).post_tags ?? []).map((pt: any) => pt.tags).filter(Boolean)
@@ -117,10 +123,21 @@ export default async function PostPage({ params }: Props) {
 
   const htmlWithIds = addHeadingIds(post.content ?? '')
   const headings = extractHeadings(htmlWithIds)
-  const reactionCount = reactions?.length ?? 0
-  const userReaction = user
-    ? reactions?.find((r) => r.user_id === user.id)
-    : null
+  
+  const initialCounts = { like: 0, insightful: 0, love: 0 }
+  const initialUserReacted = { like: false, insightful: false, love: false }
+  
+  reactions?.forEach(r => {
+    if (r.type in initialCounts) {
+      initialCounts[r.type as keyof typeof initialCounts]++
+      if (user && r.user_id === user.id) {
+        initialUserReacted[r.type as keyof typeof initialUserReacted] = true
+      }
+    }
+  })
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://adnans-blog.com'
+  const postUrl = `${baseUrl}/${post.slug}`
 
   return (
     <>
@@ -190,20 +207,29 @@ export default async function PostPage({ params }: Props) {
                 ))}
               </div>
             )}
+            
+            <ArticleFooter 
+              author={typedPost.profiles} 
+              postUrl={postUrl} 
+              postTitle={typedPost.title} 
+            />
           </div>
 
           {/* Reaction rail — desktop right sidebar */}
           <div className={styles.rightSidebar}>
             <ReactionRail
               postId={post.id}
-              initialCount={reactionCount}
-              initialUserReacted={!!userReaction}
+              initialCounts={initialCounts}
+              initialUserReacted={initialUserReacted}
               commentCount={comments?.length ?? 0}
               user={user}
               userProfile={userProfile}
             />
           </div>
         </div>
+
+        {/* Related Posts */}
+        <RelatedPosts currentPostId={post.id} tags={postTags} />
 
         {/* Comments */}
         <CommentsSection
@@ -213,6 +239,7 @@ export default async function PostPage({ params }: Props) {
           userProfile={userProfile}
         />
       </div>
+      <BackToTop />
     </>
   )
 }

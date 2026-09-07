@@ -20,6 +20,7 @@ export interface Database {
           full_name: string | null
           username: string | null
           avatar_url: string | null
+          bio: string | null
           role: UserRole
           created_at: string
         }
@@ -28,6 +29,7 @@ export interface Database {
           full_name?: string | null
           username?: string | null
           avatar_url?: string | null
+          bio?: string | null
           role?: UserRole
           created_at?: string
         }
@@ -35,6 +37,7 @@ export interface Database {
           full_name?: string | null
           username?: string | null
           avatar_url?: string | null
+          bio?: string | null
           role?: UserRole
         }
       }
@@ -281,7 +284,7 @@ export type Report = Database['public']['Tables']['reports']['Row']
 
 // Post with author profile joined
 export type PostWithAuthor = Post & {
-  profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'> | null
+  profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url' | 'bio'> | null
 }
 
 // Comment with user profile joined and votes
@@ -302,7 +305,7 @@ export type PostWithTags = Post & {
 
 // Full post shape used on article page (author + tags + series)
 export type PostWithSeries = Post & {
-  profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'> | null
+  profiles: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url' | 'bio'> | null
   post_tags: { tags: Tag }[]
   series_posts: {
     position: number

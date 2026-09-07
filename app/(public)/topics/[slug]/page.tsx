@@ -40,6 +40,10 @@ export default async function TopicSlugPage({ params }: Props) {
       .filter(sp => sp.posts?.status === 'published')
       .sort((a, b) => a.position - b.position)
 
+    const totalReadTime = orderedPosts.reduce((total, sp) => {
+      return total + (sp.posts?.reading_time_minutes || 0)
+    }, 0)
+
     return (
       <div className="wrap" style={{ maxWidth: '720px', margin: '0 auto', padding: '60px 24px' }}>
         <Link href="/topics" style={{ fontSize: '0.9rem', color: 'var(--ink-soft)', display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '32px', textDecoration: 'none' }}>
@@ -49,7 +53,15 @@ export default async function TopicSlugPage({ params }: Props) {
         {series.description && (
           <p style={{ color: 'var(--ink-soft)', fontSize: '1rem', margin: '0 0 40px', lineHeight: 1.6 }}>{series.description}</p>
         )}
-        <p style={{ color: 'var(--ink-faint)', fontSize: '0.85rem', margin: '0 0 32px' }}>{orderedPosts.length} post{orderedPosts.length !== 1 ? 's' : ''} in this series</p>
+        <p style={{ color: 'var(--ink-faint)', fontSize: '0.85rem', margin: '0 0 32px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <span>{orderedPosts.length} post{orderedPosts.length !== 1 ? 's' : ''} in this series</span>
+          {totalReadTime > 0 && (
+            <>
+              <span>•</span>
+              <span>Estimated total read: ~{totalReadTime} min</span>
+            </>
+          )}
+        </p>
 
         <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0' }}>
           {orderedPosts.map((sp: any, i: number) => (
