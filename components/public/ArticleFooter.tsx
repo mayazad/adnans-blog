@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './ArticleFooter.module.css'
 import type { Profile } from '@/lib/supabase/types'
 import Image from 'next/image'
