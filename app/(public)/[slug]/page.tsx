@@ -127,14 +127,14 @@ export default async function PostPage({ params }: Props) {
   const htmlWithIds = addHeadingIds(post.content ?? '')
   const headings = extractHeadings(htmlWithIds)
   
-  const initialCounts = { like: 0, insightful: 0, love: 0 }
-  const initialUserReacted = { like: false, insightful: false, love: false }
+  const initialCounts = { love: 0 }
+  const initialUserReacted = { love: false }
   
   reactions?.forEach(r => {
-    if (r.type in initialCounts) {
-      initialCounts[r.type as keyof typeof initialCounts]++
+    if (r.type === 'love') {
+      initialCounts.love++
       if (user && r.user_id === user.id) {
-        initialUserReacted[r.type as keyof typeof initialUserReacted] = true
+        initialUserReacted.love = true
       }
     }
   })
@@ -218,23 +218,25 @@ export default async function PostPage({ params }: Props) {
             />
           </div>
 
-          {/* Reaction rail — desktop right sidebar */}
-          <div className={styles.rightSidebar}>
-            <ReactionRail
-              postId={post.id}
-              initialCounts={initialCounts}
-              initialUserReacted={initialUserReacted}
-              commentCount={comments?.length ?? 0}
-              user={user}
-              userProfile={userProfile}
-            />
-          </div>
+          {/* Empty right sidebar to balance the grid on desktop */}
+          <div className={styles.rightSidebar}></div>
         </div>
 
         {/* Related Posts */}
         <RelatedPosts currentPostId={post.id} tags={postTags} />
 
-        {/* Comments */}
+        {/* Comments & Reactions */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px' }}>
+          <ReactionRail
+            postId={post.id}
+            initialCounts={initialCounts}
+            initialUserReacted={initialUserReacted}
+            commentCount={comments?.length ?? 0}
+            user={user}
+            userProfile={userProfile}
+          />
+        </div>
+
         <CommentsSection
           postId={post.id}
           initialComments={(comments ?? []) as CommentWithUser[]}

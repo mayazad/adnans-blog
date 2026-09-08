@@ -1,10 +1,10 @@
 .rail {
-  position: sticky;
-  top: 90px;
-  align-self: start;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .reactBtn {
@@ -74,18 +74,3 @@
   margin-top: 4px;
 }
 
-@media (max-width: 900px) {
-  .rail {
-    position: static;
-    flex-direction: row;
-    margin-bottom: 30px;
-    align-items: center;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 24px;
-  }
-  
-  .note {
-    margin-top: 0;
-    margin-left: 8px;
-  }
-}

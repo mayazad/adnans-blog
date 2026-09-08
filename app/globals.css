@@ -3,6 +3,7 @@
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
   --bg:             #F7F6F1;
+  --bg-masthead:    rgba(247, 246, 241, 0.92);
   --bg-raised:      #FFFFFF;
   --ink:            #1E1F1C;
   --ink-soft:       #5B5A52;
@@ -27,6 +28,7 @@
 
 [data-theme="dark"] {
   --bg:             #121212;
+  --bg-masthead:    rgba(18, 18, 18, 0.92);
   --bg-raised:      #1E1E1E;
   --ink:            #E3E0D5;
   --ink-soft:       #B0B0A8;

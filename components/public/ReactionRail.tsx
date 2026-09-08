@@ -9,8 +9,8 @@ import styles from './ReactionRail.module.css'
 
 interface Props {
   postId: string
-  initialCounts: { like: number, insightful: number, love: number }
-  initialUserReacted: { like: boolean, insightful: boolean, love: boolean }
+  initialCounts: { love: number }
+  initialUserReacted: { love: boolean }
   commentCount: number
   user: User | null
   userProfile: Pick<Profile, 'id' | 'full_name' | 'username' | 'avatar_url'> | null
@@ -25,7 +25,7 @@ export default function ReactionRail({
 }: Props) {
   const [counts, setCounts] = useState(initialCounts)
   const [reacted, setReacted] = useState(initialUserReacted)
-  const [pending, setPending] = useState({ like: false, insightful: false, love: false })
+  const [pending, setPending] = useState({ love: false })
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const supabase = createClient()
 
@@ -74,34 +74,6 @@ export default function ReactionRail({
   return (
     <>
       <aside className={styles.rail} aria-label="Reactions">
-        {/* Like */}
-        <button
-          className={`${styles.reactBtn} ${reacted.like ? styles.active : ''}`}
-          onClick={() => handleReact('like')}
-          aria-label={reacted.like ? 'Unlike' : 'Like'}
-          title="Like"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-          </svg>
-          <span>{counts.like}</span>
-        </button>
-
-        {/* Insightful */}
-        <button
-          className={`${styles.reactBtn} ${reacted.insightful ? styles.activeInsightful : ''}`}
-          onClick={() => handleReact('insightful')}
-          aria-label={reacted.insightful ? 'Remove Insightful' : 'Mark Insightful'}
-          title="Insightful"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
-          <span>{counts.insightful}</span>
-        </button>
-
         {/* Love */}
         <button
           className={`${styles.reactBtn} ${reacted.love ? styles.activeLove : ''}`}

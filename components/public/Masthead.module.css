@@ -6,7 +6,7 @@
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  background: rgba(247, 246, 241, 0.92);
+  background: var(--bg-masthead);
 }
 
 .inner {
