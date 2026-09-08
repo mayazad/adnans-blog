@@ -29,7 +29,7 @@ export default function ReactionRail({
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const supabase = createClient()
 
-  async function handleReact(type: ReactionType) {
+  async function handleReact(type: 'love') {
     if (!user) {
       setAuthModalOpen(true)
       return
