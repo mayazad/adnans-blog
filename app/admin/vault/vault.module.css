@@ -1,7 +1,7 @@
 .page {
   max-width: 680px;
   margin: 0 auto;
-  padding: 24px 16px 80px;
+  padding: 0 0 80px;  /* admin container already adds 20px 16px on mobile */
 }
 
 .header {
@@ -168,10 +168,12 @@
   gap: 8px;
   margin-top: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .incomeInput {
   flex: 1;
+  min-width: 0;
   padding: 10px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -195,6 +197,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: opacity 0.15s ease;
 }
 
@@ -410,9 +413,13 @@
 }
 
 @media (max-width: 480px) {
-  .page { padding: 16px 12px 80px; }
-  .budgetCard { padding: 16px; }
-  .quickAdd { padding: 16px; }
-  .budgetStats { gap: 16px; }
-  .statValue { font-size: 1.1rem; }
+  .page { padding: 0 0 80px; }
+  .budgetCard { padding: 14px; }
+  .quickAdd { padding: 14px; }
+  .budgetStats { gap: 12px; }
+  .statValue { font-size: 1rem; }
+  .budgetTop { flex-direction: column; gap: 8px; }
+  .quickAddRow { flex-direction: column; align-items: stretch; }
+  .addBtn { width: 100%; justify-content: center; }
+  .header { flex-direction: column; align-items: flex-start; }
 }
