@@ -1,0 +1,177 @@
+.analyticsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--bg-raised);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  color: var(--ink-faint);
+  font-family: var(--sans);
+  line-height: 1.8;
+}
+
+.emptyIcon { font-size: 3rem; margin-bottom: 12px; }
+
+/* ─── Summary Row ───────────────────────────────────────────────── */
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.summaryCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summaryLabel {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+}
+
+.summaryValue {
+  font-family: var(--sans);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.summaryValue.danger { color: #e53e3e; }
+.summaryValue.safe { color: var(--emerald-deep); }
+
+/* ─── Chart Cards ───────────────────────────────────────────────── */
+.chartCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chartTitle {
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+/* ─── Category List ─────────────────────────────────────────────── */
+.catList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.catRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.catDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.catName {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.catBarWrap {
+  flex: 1;
+  height: 6px;
+  background: var(--neutral-tint);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.catBar {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+  min-width: 4px;
+}
+
+.catPct {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.catAmt {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ─── Insights ──────────────────────────────────────────────────── */
+.insightsCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.insightsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insightItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--neutral-tint);
+}
+
+.insightItem.red   { background: rgba(229, 62, 62, 0.08); }
+.insightItem.yellow { background: rgba(245, 158, 11, 0.1); }
+.insightItem.green  { background: rgba(18, 148, 107, 0.1); }
+.insightItem.blue   { background: var(--emerald-tint); }
+
+.insightIcon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.4; }
+
+.insightText {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .chartCard { padding: 14px; }
+  .catName { min-width: 60px; font-size: 0.78rem; }
+  .catAmt { width: 60px; }
+  .summaryValue { font-size: 1.1rem; }
+}

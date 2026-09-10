@@ -24,6 +24,7 @@
     "@tiptap/pm": "^3.31.0",
     "@tiptap/react": "^3.31.0",
     "@tiptap/starter-kit": "^3.31.0",
+    "bcryptjs": "^3.0.3",
     "gray-matter": "^4.0.3",
     "jsdom": "^29.1.1",
     "lucide-react": "^1.39.0",
@@ -31,9 +32,11 @@
     "mermaid": "^11.17.2",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

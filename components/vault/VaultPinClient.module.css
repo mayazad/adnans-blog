@@ -1,0 +1,123 @@
+.lockScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 24px;
+}
+
+.lockCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 360px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: center;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.pinRow {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.pinInput {
+  width: 56px;
+  height: 64px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 1.8rem;
+  text-align: center;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 600;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+  -webkit-text-security: disc;
+}
+
+.pinInput:focus {
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 3px var(--emerald-tint);
+}
+
+.error {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: #e53e3e;
+  text-align: center;
+  margin: 0;
+  padding: 8px 16px;
+  background: rgba(229, 62, 62, 0.08);
+  border-radius: var(--radius-sm);
+  width: 100%;
+}
+
+.unlockBtn {
+  width: 100%;
+  padding: 14px;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--sans);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  margin-top: 8px;
+}
+
+.unlockBtn:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.unlockBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .lockCard {
+    padding: 40px 24px;
+  }
+  .pinInput {
+    width: 48px;
+    height: 56px;
+    font-size: 1.5rem;
+  }
+  .pinRow {
+    gap: 10px;
+  }
+}
