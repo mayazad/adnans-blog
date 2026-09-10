@@ -218,8 +218,6 @@ export default async function PostPage({ params }: Props) {
             />
           </div>
 
-          {/* Empty right sidebar to balance the grid on desktop */}
-          <div className={styles.rightSidebar}></div>
         </div>
 
         {/* Related Posts */}

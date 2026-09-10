@@ -12,7 +12,7 @@
 
 .articleGrid {
   display: grid;
-  grid-template-columns: 180px minmax(0, 680px) 160px;
+  grid-template-columns: 200px minmax(0, 700px);
   gap: 48px;
   justify-content: center;
   padding-bottom: 72px;
@@ -26,14 +26,10 @@
   grid-column: 2;
   min-width: 0;
 }
-.rightSidebar {
-  grid-column: 3;
-  min-width: 0;
-}
 
 @media (max-width: 1180px) {
   .articleGrid {
-    grid-template-columns: 140px minmax(0, 1fr) 140px;
+    grid-template-columns: 160px minmax(0, 1fr);
     gap: 32px;
   }
 }
@@ -41,7 +37,7 @@
 @media (max-width: 900px) {
   .articleGrid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    gap: 0;
     padding-bottom: 40px;
   }
   .leftSidebar {
@@ -49,12 +45,5 @@
   }
   .mainContent {
     grid-column: 1;
-    grid-row: 2;
-  }
-  .rightSidebar {
-    grid-column: 1;
-    grid-row: 3;
-    display: flex;
-    justify-content: center;
   }
 }
