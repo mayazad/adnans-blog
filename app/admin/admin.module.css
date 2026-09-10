@@ -91,36 +91,42 @@
     top: 0;
     z-index: 100;
     overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none; /* hide scrollbar Firefox */
+    -ms-overflow-style: none; /* hide scrollbar IE */
   }
-  
+
+  .sidebar::-webkit-scrollbar { display: none; } /* hide scrollbar Chrome */
+
   .brand {
     border-bottom: none;
     padding: 12px 16px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     flex-shrink: 0;
+    border-right: 1px solid var(--line);
   }
   
   .nav {
     flex-direction: row;
-    padding: 0 8px;
+    padding: 0 4px;
     align-items: center;
-    gap: 2px;
-    overflow-x: auto;
-    flex: 1;
+    gap: 0;
+    flex: unset;
+    flex-shrink: 0;
   }
   
   .link {
-    padding: 10px 10px;
+    padding: 12px 10px;
     font-size: 0.8rem;
-    gap: 6px;
+    gap: 5px;
     white-space: nowrap;
     flex-shrink: 0;
   }
 
   .bottomNav {
     display: flex;
-    padding: 0 8px;
+    padding: 0 4px;
     border-top: none;
     border-left: 1px solid var(--line);
     flex-shrink: 0;

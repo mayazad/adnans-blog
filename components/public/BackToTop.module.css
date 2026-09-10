@@ -1,7 +1,7 @@
 .backToTopBtn {
   position: fixed;
   bottom: 32px;
-  right: 32px;
+  left: 32px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -41,7 +41,8 @@
 @media (max-width: 768px) {
   .backToTopBtn {
     bottom: 24px;
-    right: 24px;
+    left: 24px;
     padding: 10px 14px;
+    font-size: 0.82rem;
   }
 }
